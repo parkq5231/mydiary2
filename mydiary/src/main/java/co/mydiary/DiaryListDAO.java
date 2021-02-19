@@ -14,24 +14,24 @@ public class DiaryListDAO implements DAO {
 
 	List<DiaryVO> list;
 	String filename = "diary.dat";
-	String filepath ;
+	String filepath;
 
 	public DiaryListDAO() {
-		filepath = System.getProperty("user.home") +"/"+filename;
+		filepath = System.getProperty("user.home") + "/" + filename;
 		readFile(); // 파일 읽어서 리스트 초기화
 	}
 
 	// 파일확인
 	public boolean fileCheck() {
-		System.out.println(filepath+"====");
+		System.out.println(filepath + "====");
 		boolean fileyn = true;
 		File file = new File(filepath);
 		fileyn = file.exists();
-		
+
 		// 파일이 있더라도 파일 크기가 0이면 읽을 내용이 없으므로
 		if (file.length() == 0)
 			fileyn = false;
-		
+
 		return fileyn;
 	}
 
@@ -60,13 +60,13 @@ public class DiaryListDAO implements DAO {
 	// 리스트를 파일에 저장
 	public void writeFile() {
 		try {
-			//저장할 내용이 있다면
+			// 저장할 내용이 있다면
 			if (list.size() > 0) {
 				// 파일 생성할 때 없으면 새로 만들고 있으면 덮어쓰게 된다
 				FileOutputStream fos = new FileOutputStream(filepath);
 				BufferedOutputStream bos = new BufferedOutputStream(fos);
 				ObjectOutputStream out = new ObjectOutputStream(bos);
-				//리스트를 파일에 저장
+				// 리스트를 파일에 저장
 				out.writeObject(list);
 				out.close();
 			}
@@ -89,25 +89,35 @@ public class DiaryListDAO implements DAO {
 			}
 		}
 		list.add(idx, vo);
-		//변경될때마다 파일에 저장
+		// 변경될때마다 파일에 저장
 		writeFile();
 		return 1;
 	}
 
-	//수정
+	// 수정
 	public void update(DiaryVO vo) {
-		//to do : 수정
+		// to do : 수정
+		int size = list.size();
+		for (int idx = 0; idx < size; idx++) {
+			list.get(idx).setContents(vo.getContents());
+		}
 	}
 
-	//해당 날짜의 내용을 삭제하고 삭제가 되었으면 1을 리턴
+	// 해당 날짜의 내용을 삭제하고 삭제가 되었으면 1을 리턴
 	public int delete(String date) {
 		int result = 0;
-		//to do : 삭제
-		
+		// to do : 삭제
+		int size = list.size();
+		for (int idx = 0; idx < size; idx++) {
+			if (list.get(idx).getWdate().equals(date)) {
+				list.remove(idx);
+				result = 1;
+			}
+		}
 		return result;
 	}
 
-	//날짜로 검색
+	// 날짜로 검색
 	public DiaryVO selectDate(String date) {
 		DiaryVO vo = null;
 		int size = list.size();
@@ -120,11 +130,16 @@ public class DiaryListDAO implements DAO {
 		return vo;
 	}
 
-	//내용으로 검색
+	// 내용으로 검색
 	public List<DiaryVO> selectContent(String content) {
 		List<DiaryVO> searchlist = new ArrayList<>();
-		//to do : 내용으로 검색
-		
+		// to do : 내용으로 검색
+		int size = list.size();
+		for (int idx = 0; idx < size; idx++) {
+			if (list.get(idx).getContents().contains(content)) {
+				searchlist.add(list.get(idx));
+			}
+		}
 		return searchlist;
 	}
 

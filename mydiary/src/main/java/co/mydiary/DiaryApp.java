@@ -10,8 +10,8 @@ public class DiaryApp {
 	public void start() {
 
 		// 저장된 내용 읽어서 리스트에 담기
-//		dao = new DiaryListDAO();	
-		dao = new DiaryOracleDAO();
+		dao = new DiaryListDAO();	
+//		dao = new DiaryOracleDAO();
 
 		int menunum;
 
